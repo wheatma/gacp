@@ -13,11 +13,11 @@ import { getCommitTypes, updateTypesStat } from './messages/commit-types';
 
 import { getGitmojis, updateGitmojisStat } from './messages/gitmojis';
 import {
+  CommitlintRule,
   getCommitlintConfigRules,
   getRuleValue,
 } from './messages/commitlint-config';
 import { EMOJI_TYPES } from './configs';
-import { PromptObject } from 'prompts';
 
 function debug(...message: any[]) {
   log.debug('gacp:prompt', ...message);
@@ -62,7 +62,7 @@ export default async function prompt({
   debug('history:', history);
 
   // ${type}(${scope}): ${emoji}${subject} \n\n ${body} \n\n ${footer}
-  const questions: PromptObject[] = [
+  const questions: prompts.PromptObject[] = [
     {
       type: 'autocomplete',
       name: 'type',
@@ -123,20 +123,11 @@ export default async function prompt({
   const {
     'header-max-length': headerMaxLengthRule,
     'body-max-line-length': bodyMaxLengthRule,
+    'footer-max-line-length': footerMaxLengthRule,
   } = await getCommitlintConfigRules();
 
   const maxHeaderLength = getRuleValue(headerMaxLengthRule, Infinity);
   debug('maxHeaderLength', maxHeaderLength);
-
-  const maxLineWidth = getRuleValue(bodyMaxLengthRule, Infinity);
-  debug('maxLineWidth', maxLineWidth);
-
-  const wrapOptions = {
-    trim: true,
-    newline: '\n',
-    indent: '',
-    width: maxLineWidth,
-  };
 
   // parentheses are only needed when a scope is present
   let scope = answers.scope.trim();
@@ -147,9 +138,23 @@ export default async function prompt({
   let head = `${answers.type}${scope}: ${gitmoji}${answers.subject.trim()}`;
   head = head.slice(0, maxHeaderLength);
 
-  // Wrap these lines at 100 characters
-  const body = wrap(answers.body, wrapOptions);
-  const footer = wrap(answers.footer, wrapOptions);
+  // Wrap these lines
+  function getWrapOptions(width: number) {
+    return {
+      trim: true,
+      newline: '\n',
+      indent: '',
+      width,
+    };
+  }
+
+  function wrapWords(words: string, rule: CommitlintRule): string {
+    const maxLineWidth = getRuleValue(rule, words.length);
+    return wrap(words, getWrapOptions(maxLineWidth));
+  }
+
+  const body = wrapWords(answers.body, bodyMaxLengthRule);
+  const footer = wrapWords(answers.footer, footerMaxLengthRule);
 
   await updateTypesStat(answers.type);
 

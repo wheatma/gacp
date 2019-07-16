@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.6.2](https://github.com/vivaxy/gacp/compare/v2.6.1...v2.6.2) (2019-07-16)
+
+
+### Bug Fixes
+
+* **import:** :bug: remove useless import ([9ee670a](https://github.com/vivaxy/gacp/commit/9ee670a))
+* **word wrap:** :bug: width value ([b5444a2](https://github.com/vivaxy/gacp/commit/b5444a2))
+
+
+
+### [2.6.1](https://github.com/vivaxy/gacp/compare/v2.6.0...v2.6.1) (2019-07-16)
+
+
+### Bug Fixes
+
+* **format:** :bug: fix wrap body or footer at the right width ([1b62903](https://github.com/vivaxy/gacp/commit/1b62903))
+* **format:** :bug: fix wrap body or footer at the right width ([#33](https://github.com/vivaxy/gacp/issues/33)) ([3f29a7c](https://github.com/vivaxy/gacp/commit/3f29a7c))
+
+
+### Tests
+
+* **nyc:** :white_check_mark: fix nyc coverage report ([89f1d02](https://github.com/vivaxy/gacp/commit/89f1d02))
+
+
+
 ## [2.6.0](https://github.com/vivaxy/gacp/compare/v2.5.8...v2.6.0) (2019-07-04)
 
 
